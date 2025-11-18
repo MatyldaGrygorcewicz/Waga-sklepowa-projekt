@@ -1,0 +1,128 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Git files and directories
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+# Claude settings and IDE files
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation files (not needed for cloud deployment)
+README.md
+DEPLOYMENT.md
+Instrukcja.md
+PUSH_HELP.md
+PUSH_INSTRUKCJA.md
+*.md
+
+# Local configuration files
+*.local
+*.env.local
+.env.local
+.env.example
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+data/
+data/*.db
+
+# Jupyter notebook files
+*.ipynb
+.ipynb_checkpoints/
+fruit_simple_just_data.ipynb
+
+# Windows batch files (not needed for cloud)
+*.bat
+start.bat
+PUSH_NOW.bat
+PUSH_TO_GITHUB.bat
+
+# Build scripts
+build.sh
+
+# Large files and cloud SDKs (not needed in cloud)
+google-cloud-sdk/
+google-cloud-cli-linux-x86_64.tar.gz
+fruit_classifier_model.h5
+
+# Node modules (if using npm)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+
+# Logs and cache
+*.log
+logs/
+.cache/
+
+# Miscellaneous
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.pyo
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+*.bak
+*.swp
+
+# Deployment configuration (for Render, use appropriate config only)
+render.yaml
+
+# OS temporary files
+tmp/
+temp/
+*.tmp
+*.TMP
