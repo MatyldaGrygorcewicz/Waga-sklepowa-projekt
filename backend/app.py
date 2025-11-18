@@ -100,6 +100,10 @@ def predict():
     Expects: POST with image data (base64 or multipart file)
     Returns: Classification results, weight estimate, and price
     """
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         # Get image from request
         image_data = None
@@ -167,6 +171,10 @@ def calculate_price():
     Calculate price for a specific product and weight
     Expects: {"product_name": "...", "weight_grams": ...}
     """
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         data = request.json
         product_name = data.get('product_name')
@@ -190,6 +198,10 @@ def calculate_price():
 @app.route('/api/products', methods=['GET'])
 def get_products():
     """Get list of all available products"""
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         db = get_database()
         cursor = db.conn.cursor()
@@ -206,6 +218,10 @@ def get_products():
 @app.route('/api/product/<name>', methods=['GET'])
 def get_product(name):
     """Get specific product information"""
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         db = get_database()
         product = db.get_product_by_name(name)
@@ -225,6 +241,10 @@ def add_transaction():
     Record a transaction
     Expects: {"product_name": "...", "weight_g": ..., "price_per_kg": ..., "total_price": ..., "confidence": ...}
     """
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         data = request.json
         product_name = data.get('product_name')
@@ -248,6 +268,10 @@ def add_transaction():
 @app.route('/api/transactions', methods=['GET'])
 def get_transactions():
     """Get recent transactions"""
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         limit = request.args.get('limit', 10, type=int)
         db = get_database()
@@ -262,6 +286,10 @@ def get_transactions():
 @app.route('/api/model_info', methods=['GET'])
 def get_model_info():
     """Get ML model information"""
+    # Ensure app is initialized (for gunicorn/production)
+    if not app_initialized:
+        initialize_app()
+
     try:
         classifier = get_classifier()
         if not classifier:
