@@ -3,10 +3,10 @@ services:
     name: waga-sklepowa-ai
     env: python
     region: frankfurt
-    buildCommand: "./build.sh"
-    startCommand: "cd backend && gunicorn --bind 0.0.0.0:$PORT app:app"
+    buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt"
+    startCommand: "cd backend && gunicorn --bind 0.0.0.0:$PORT --timeout 120 app:app"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.11.9
       - key: PORT
         value: 10000
