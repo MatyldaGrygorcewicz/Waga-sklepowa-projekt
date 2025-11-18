@@ -4,7 +4,8 @@
  */
 
 // Configuration
-const API_URL = 'http://localhost:5000/api';
+// Use relative URL for API calls - works both locally and in production
+const API_URL = window.location.origin + '/api';
 
 // Global state
 let cameraStream = null;
@@ -73,7 +74,7 @@ function initializeEventListeners() {
 // Check if backend is running
 async function checkBackendStatus() {
     try {
-        const response = await fetch(`${API_URL.replace('/api', '')}/`);
+        const response = await fetch(`${API_URL}/health`);
         const data = await response.json();
         if (data.status === 'running') {
             showToast('Backend połączony pomyślnie', 'success');

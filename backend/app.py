@@ -3,7 +3,7 @@ Flask Backend Application for AI-Powered Shop Scale
 Handles image classification, weight estimation, and pricing
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 import base64
@@ -16,11 +16,13 @@ from weight_estimator import initialize_estimator, get_estimator
 from database import initialize_database, get_database
 
 # Initialize Flask app
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
+
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
 CORS(app)  # Enable CORS for frontend communication
 
 # Configuration
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, 'fruit_classifier_model.h5')
 LABELS_PATH = os.path.join(BASE_DIR, 'model_info.json')
 DB_PATH = os.path.join(BASE_DIR, 'data', 'products.db')
@@ -70,7 +72,19 @@ def initialize_app():
 
 
 @app.route('/')
-def index():
+def serve_frontend():
+    """Serve frontend index.html"""
+    return send_from_directory(FRONTEND_DIR, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Serve other static files"""
+    if path.startswith('api/'):
+        return jsonify({"error": "Not found"}), 404
+    return send_from_directory(FRONTEND_DIR, path)
+
+@app.route('/api/health')
+def health_check():
     """Health check endpoint"""
     return jsonify({
         "status": "running",
