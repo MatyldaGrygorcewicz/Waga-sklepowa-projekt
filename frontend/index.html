@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waga Sklepowa AI - System Rozpoznawania Owoców i Warzyw</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🍎 Waga Sklepowa AI</h1>
+            <p class="subtitle">Automatyczne rozpoznawanie owoców i warzyw</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Camera Section -->
+            <div class="camera-section">
+                <div class="camera-container">
+                    <video id="camera" autoplay playsinline></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <div id="preview-image" class="preview-image" style="display: none;">
+                        <img id="captured-image" src="" alt="Zeskanowany obraz">
+                    </div>
+                </div>
+
+                <div class="camera-controls">
+                    <button id="start-camera-btn" class="btn btn-primary">
+                        📷 Włącz kamerę
+                    </button>
+                    <button id="capture-btn" class="btn btn-success" style="display: none;">
+                        ✅ Skanuj produkt
+                    </button>
+                    <button id="retake-btn" class="btn btn-secondary" style="display: none;">
+                        🔄 Skanuj ponownie
+                    </button>
+                </div>
+
+                <div class="upload-section">
+                    <label for="file-upload" class="btn btn-info">
+                        📁 Prześlij zdjęcie
+                    </label>
+                    <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                </div>
+
+                <div id="camera-status" class="status-message"></div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analizowanie obrazu...</p>
+                </div>
+
+                <div id="results" class="results-container" style="display: none;">
+                    <h2>Wyniki rozpoznawania:</h2>
+
+                    <!-- Product Info -->
+                    <div class="result-card">
+                        <h3>🏷️ Produkt</h3>
+                        <p class="product-name" id="product-name">-</p>
+                        <p class="product-english" id="product-english">-</p>
+                        <div class="confidence-bar">
+                            <div class="confidence-label">
+                                <span>Pewność rozpoznania:</span>
+                                <span id="confidence-value">-</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="confidence-progress" class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alternative Results -->
+                    <div class="result-card">
+                        <h3>🔍 Top 5 możliwych produktów</h3>
+                        <div id="alternatives-list" class="alternatives-list">
+                            <!-- Będzie wypełnione dynamicznie -->
+                        </div>
+                    </div>
+
+                    <!-- Weight Info -->
+                    <div class="result-card">
+                        <h3>⚖️ Szacowana waga</h3>
+                        <p class="weight-value">
+                            <span id="weight-grams">-</span> g
+                            (<span id="weight-kg">-</span> kg)
+                        </p>
+                        <p class="weight-note" id="weight-note">-</p>
+                    </div>
+
+                    <!-- Price Info -->
+                    <div class="result-card highlight">
+                        <h3>💰 Cena</h3>
+                        <div class="price-details">
+                            <p>Cena za kg: <strong id="price-per-kg">-</strong> PLN</p>
+                            <p class="total-price">
+                                Razem: <span id="total-price">-</span> PLN
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="add-to-cart-btn" class="btn btn-success">
+                            🛒 Dodaj do koszyka
+                        </button>
+                        <button id="manual-correct-btn" class="btn btn-secondary">
+                            ✏️ Popraw ręcznie
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Manual Correction Dialog -->
+                <div id="manual-dialog" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <h3>Popraw rozpoznanie</h3>
+                        <p>Wybierz prawidłowy produkt z listy:</p>
+                        <select id="product-select" class="product-select">
+                            <option value="">Ładowanie produktów...</option>
+                        </select>
+                        <div class="modal-buttons">
+                            <button id="confirm-manual-btn" class="btn btn-primary">Potwierdź</button>
+                            <button id="cancel-manual-btn" class="btn btn-secondary">Anuluj</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="cart-section">
+            <h2>🛒 Koszyk (<span id="cart-count">0</span>)</h2>
+            <div id="cart-items" class="cart-items">
+                <p class="empty-cart">Koszyk jest pusty</p>
+            </div>
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Razem:</span>
+                    <span class="cart-total" id="cart-total">0.00 PLN</span>
+                </div>
+                <button id="checkout-btn" class="btn btn-success" disabled>
+                    💳 Przejdź do kasy
+                </button>
+                <button id="clear-cart-btn" class="btn btn-danger" style="display: none;">
+                    🗑️ Wyczyść koszyk
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
