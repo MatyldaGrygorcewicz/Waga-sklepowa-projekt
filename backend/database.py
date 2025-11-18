@@ -20,8 +20,15 @@ class ProductDatabase:
     def connect(self):
         """Connect to SQLite database"""
         try:
+            # Create directory if it doesn't exist
+            db_dir = os.path.dirname(self.db_path)
+            if db_dir and not os.path.exists(db_dir):
+                os.makedirs(db_dir, exist_ok=True)
+                print(f"Created database directory: {db_dir}")
+
             self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
             self.conn.row_factory = sqlite3.Row  # Return rows as dictionaries
+            print(f"Connected to database: {self.db_path}")
             return True
         except Exception as e:
             print(f"Database connection error: {str(e)}")

@@ -200,10 +200,14 @@ def get_products():
     """Get list of all available products"""
     # Ensure app is initialized (for gunicorn/production)
     if not app_initialized:
-        initialize_app()
+        if not initialize_app():
+            return jsonify({"error": "Failed to initialize application"}), 500
 
     try:
         db = get_database()
+        if not db or not db.conn:
+            return jsonify({"error": "Database not initialized"}), 500
+
         cursor = db.conn.cursor()
         cursor.execute("SELECT name, name_polish, category, price_per_kg FROM products ORDER BY name")
         rows = cursor.fetchall()
@@ -212,6 +216,7 @@ def get_products():
         return jsonify({"products": products, "count": len(products)})
 
     except Exception as e:
+        print(f"Error in get_products: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 

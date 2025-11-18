@@ -89,7 +89,17 @@ async function checkBackendStatus() {
 async function loadProducts() {
     try {
         const response = await fetch(`${API_URL}/products`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+
+        if (!data || !data.products) {
+            throw new Error('Invalid response format: missing products data');
+        }
+
         allProducts = data.products;
 
         // Populate product select dropdown
@@ -103,6 +113,7 @@ async function loadProducts() {
     } catch (error) {
         console.error('Error loading products:', error);
         showToast('Błąd ładowania produktów', 'error');
+        elements.productSelect.innerHTML = '<option value="">Błąd ładowania produktów</option>';
     }
 }
 
@@ -234,13 +245,20 @@ async function classifyImage(imageBlob) {
 function displayResults(data) {
     currentResult = data;
 
+    // Validate data structure
+    if (!data || !data.classification || !data.weight || !data.price) {
+        console.error('Invalid data structure:', data);
+        showToast('Błąd: nieprawidłowe dane z serwera', 'error');
+        return;
+    }
+
     // Product information
     const classification = data.classification;
-    elements.productName.textContent = data.price.product_name_polish;
-    elements.productEnglish.textContent = classification.product;
+    elements.productName.textContent = data.price.product_name_polish || 'Nieznany';
+    elements.productEnglish.textContent = classification.product || 'Unknown';
 
     // Confidence
-    const confidence = classification.confidence;
+    const confidence = classification.confidence || 0;
     elements.confidenceValue.textContent = `${confidence.toFixed(1)}%`;
     elements.confidenceProgress.style.width = `${confidence}%`;
 
@@ -254,21 +272,21 @@ function displayResults(data) {
         elements.alternativesList.innerHTML = allPredictions.map((pred, index) => `
             <div class="alternative-item top-${index + 1}" onclick="selectAlternative('${pred.label}')">
                 <span class="alternative-name">${index + 1}. ${pred.label}</span>
-                <span class="alternative-confidence">${pred.confidence.toFixed(1)}%</span>
+                <span class="alternative-confidence">${(pred.confidence || 0).toFixed(1)}%</span>
             </div>
         `).join('');
     }
 
     // Weight
     const weight = data.weight;
-    elements.weightGrams.textContent = weight.weight_grams.toFixed(1);
-    elements.weightKg.textContent = weight.weight_kg.toFixed(3);
+    elements.weightGrams.textContent = (weight.weight_grams || 0).toFixed(1);
+    elements.weightKg.textContent = (weight.weight_kg || 0).toFixed(3);
     elements.weightNote.textContent = weight.note || '';
 
     // Price
     const price = data.price;
-    elements.pricePerKg.textContent = price.price_per_kg.toFixed(2);
-    elements.totalPrice.textContent = price.total_price.toFixed(2);
+    elements.pricePerKg.textContent = (price.price_per_kg || 0).toFixed(2);
+    elements.totalPrice.textContent = (price.total_price || 0).toFixed(2);
 
     // Show results
     elements.results.style.display = 'block';
